@@ -52,8 +52,8 @@ export default function ContactForm({ onSubmit, contacts }) {
     setNumber('');
   };
 
-  const nameId = useMemo(() => nanoid(), []);
-  const phoneId = useMemo(() => nanoid(), []);
+  const nameId = useMemo(() => nanoid(), [contacts]);
+  const phoneId = useMemo(() => nanoid(), [contacts]);
 
   return (
     <form className={css.info} onSubmit={handleAddName}>
