@@ -1,28 +1,31 @@
-import { Component } from 'react';
+import { useState, useMemo, memo } from 'react';
 import { nanoid } from 'nanoid';
 
 import css from './contactform.module.css';
 
-class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
+export default function ContactForm({ onSubmit, contacts }) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleInput = event => {
+    const { name, value } = event.currentTarget;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        return;
+    }
   };
 
-  handleInput = event => {
-    this.setState({ [event.currentTarget.name]: event.currentTarget.value });
-  };
-
-  handleAddName = event => {
+  const handleAddName = event => {
     event.preventDefault();
-    const { name, number } = this.state;
     const nameId = event.currentTarget.elements.name.id;
-    const arrayContacts = this.props.contacts.find(
-      contact => contact.name === name
-    );
-    const arrayNumbers = this.props.contacts.find(
-      contact => contact.number === number
-    );
+    const arrayContacts = contacts.find(contact => contact.name === name);
+    const arrayNumbers = contacts.find(contact => contact.number === number);
 
     if (arrayContacts) {
       alert(
@@ -35,54 +38,52 @@ class ContactForm extends Component {
       return;
     }
 
-    this.props.onSubmit({
+    onSubmit({
       name,
       number,
       id: nameId,
     });
 
-    this.reset();
+    reset();
   };
 
-  reset = () => {
-    this.setState({ name: '', number: '' });
+  const reset = () => {
+    setName('');
+    setNumber('');
   };
 
-  render() {
-    const nameId = nanoid();
-    const phoneId = nanoid();
-    return (
-      <form className={css.info} onSubmit={this.handleAddName}>
-        <label htmlFor={nameId} className={css.label}>
-          Name
-          <input
-            className={css.field}
-            type="text"
-            name="name"
-            required
-            value={this.state.name}
-            onChange={this.handleInput}
-            id={nameId}
-          />
-        </label>
-        <label htmlFor={phoneId} className={css.label}>
-          Number
-          <input
-            className={css.field}
-            type="tel"
-            name="number"
-            required
-            value={this.state.number}
-            onChange={this.handleInput}
-            id={phoneId}
-          />
-        </label>
-        <button className={css.btn} type="submit">
-          Add contact
-        </button>
-      </form>
-    );
-  }
-}
+  const nameId = useMemo(() => nanoid(), [contacts]);
+  const phoneId = useMemo(() => nanoid(), [contacts]);
 
-export default ContactForm;
+  return (
+    <form className={css.info} onSubmit={handleAddName}>
+      <label htmlFor={nameId} className={css.label}>
+        Name
+        <input
+          className={css.field}
+          type="text"
+          name="name"
+          required
+          value={name}
+          onChange={handleInput}
+          id={nameId}
+        />
+      </label>
+      <label htmlFor={phoneId} className={css.label}>
+        Number
+        <input
+          className={css.field}
+          type="tel"
+          name="number"
+          required
+          value={number}
+          onChange={handleInput}
+          id={phoneId}
+        />
+      </label>
+      <button className={css.btn} type="submit">
+        Add contact
+      </button>
+    </form>
+  );
+};
