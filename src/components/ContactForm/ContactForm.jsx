@@ -1,4 +1,4 @@
-import { useState, useMemo, memo } from 'react';
+import { useState, useMemo } from 'react';
 import { nanoid } from 'nanoid';
 
 import css from './contactform.module.css';
@@ -52,8 +52,8 @@ export default function ContactForm({ onSubmit, contacts }) {
     setNumber('');
   };
 
-  const nameId = useMemo(() => nanoid(), [contacts]);
-  const phoneId = useMemo(() => nanoid(), [contacts]);
+  const nameId = useMemo(() => nanoid(), []);
+  const phoneId = useMemo(() => nanoid(), []);
 
   return (
     <form className={css.info} onSubmit={handleAddName}>
@@ -86,4 +86,4 @@ export default function ContactForm({ onSubmit, contacts }) {
       </button>
     </form>
   );
-};
+}
